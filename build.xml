@@ -1,0 +1,45 @@
+<project default="test">
+    <property name="lib.dir" value="lib"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="out"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="out/src/classes"/>
+        <javac srcdir="src" destdir="out/src/classes"/>
+    </target>
+
+    <target name="compileTests">
+        <mkdir dir="out/test/classes"/>
+        <javac srcdir="test" destdir="out/test/classes" classpathref="classpath" classpath="out/src/classes"/>
+    </target>
+
+    <target name="test" depends="clean,compile,compileTests">
+        <junit printsummary="yes">
+            <classpath>
+                <path refid="classpath"/>
+                <path path="out/src/classes"/>
+                <path path="out/test/classes"/>
+            </classpath>
+
+            <formatter type="plain" usefile="false"/>
+            <batchtest fork="yes">
+                <fileset dir="test" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="run" depends="compile" description="run the project">
+        <java classpath="out/src/classes/" classname="com.tot.TameOfThrones"/>
+    </target>
+
+    <presetdef name="javac">
+        <javac includeantruntime="false"/>
+    </presetdef>
+
+</project>
